@@ -14,19 +14,60 @@ datasource db {
 }
 
 model User { 
-  id    Int     @id @default(autoincrement()) 
+  id    String  @id @default(uuid()) 
   email String  @unique
   name  String?
-  posts Post[]
+  created_at DateTime @default(now())
+
+  learningItems Learning_Items[]
+  dailyLogs Daily_Logs[]
+  projects Projects[]
+  weeklyMetrics Weekly_Metrics[]
+
 } 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+model Learning_Items {
+  id String      @id @default(uuid())
+  user_id String
+  user User @relation(fields: [user_id], references: [id])
+  title String?
+  type String?
+  progress_percent Int?
+  status String?
+  started_at DateTime @default(now())
+  completed_at DateTime @default(now())
+}
+model Daily_Logs {
+  id String @id @default(uuid())
+  user_id String 
+  user User @relation(fields: [user_id], references: [id])
+  date String?
+  build_hours Int?
+  reading_hours Int?
+  ai_used Boolean?
+  summary String?
+  confidence_score Int?
+}
+model Projects {
+  id String @id @default(uuid())
+  user_id String 
+  user User @relation(fields: [user_id], references: [id])
+  title String?
+  architecture_written Boolean?
+  deployed Boolean?
+  tutorial_used Boolean?
+  ai_usagage_level String?
+  status String?
+}
+model Weekly_Metrics{
+  id String @id @default(uuid())
+  user_id String 
+  user User @relation(fields: [user_id], references: [id])
+  week_number Int?
+  independence_score Int?
+  total_build_hours Int?
+  total_reading_hours Int?
+}
+
 
 
 
