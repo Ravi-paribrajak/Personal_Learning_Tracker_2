@@ -55,7 +55,7 @@ model Projects {
   architecture_written Boolean?
   deployed Boolean?
   tutorial_used Boolean?
-  ai_usagage_level String?
+  ai_usage_level String?
   status String?
 }
 model Weekly_Metrics{
