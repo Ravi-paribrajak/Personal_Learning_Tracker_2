@@ -40,7 +40,7 @@ model Daily_Logs {
   id String @id @default(uuid())
   user_id String 
   user User @relation(fields: [user_id], references: [id])
-  date String?
+  date DateTime
   build_hours Int?
   reading_hours Int?
   ai_used Boolean?
