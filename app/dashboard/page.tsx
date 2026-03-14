@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma"
+import CreateItemForm from './CreateItemForm';
+
 
 export default async function DashboardPage() {
 
@@ -18,6 +19,7 @@ export default async function DashboardPage() {
 
             <div>
                 <h1>My Learning Dashboard</h1>
+                <CreateItemForm/>
                 <ul>
                     {learningItems.map((learningItem: any) => (
                         <div key={learningItem.id}>
