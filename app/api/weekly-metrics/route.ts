@@ -55,3 +55,16 @@ export async function POST(request: Request) {
     // 6: Send Response
     return NextResponse.json({ message: "Weekly Metrics Generated !", data: newMetric }, { status: 201 });
 }
+export async function GET() {
+
+    // Fetch all Metrics for our dummy User
+    const allMetrics = await prisma.weekly_Metrics.findMany({
+        where: {
+            user_id: "ravi-1"
+        }
+    });
+    // Grab the very last item in the array(The absolute newest Calculation!)
+    const latestMetrics = allMetrics[allMetrics.length - 1];
+
+    return NextResponse.json({ message: "Weekly metric Fetched!", data: latestMetrics }, { status: 200 });
+}

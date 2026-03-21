@@ -1,5 +1,6 @@
 import CreateDailyLogForm from './CreateDailyLogForm';
 import CreateItemForm from './CreateItemForm';
+import CalculateScoreButton from './CalculateScoreButton';
 
 
 export default async function DashboardPage() {
@@ -16,31 +17,43 @@ export default async function DashboardPage() {
     // --- FETCH DAILY LOGS ---
     const resLogs = await fetch("http://localhost:3000/api/daily-logs", {
         cache: 'no-store'
-    })
+    });
     const parseLogs = await resLogs.json();
     const dailyLogs = parseLogs.data;
-    ;
+    
+    // --- FETCH WEEKLY METRICS ---
+    const resMetrics = await fetch("http://localhost:3000/api/weekly-metrics", {
+        cache: 'no-store'
+    });
+    const parseMetrics = await resMetrics.json();
+    const weeklyMetric = parseMetrics.data;
+
     // Rendering the UI
     return (
         <main>
 
             <div>
+                {/* 3. NEW: The Weekly Stats UI (Placed at the very top!) */}
+            <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ccc", borderRadius: "8px" }}>
+                {/* We use ?. and || 0 just in case there is no data yet! */}
+                <h2>📊 Weekly Stats (Week {weeklyMetric?.week_number || 1})</h2>
+                <p><strong>Independence Score:</strong> {weeklyMetric?.independence_score || 0}</p>
+                <p><strong>Total Build Hours:</strong> {weeklyMetric?.total_build_hours || 0}</p>
+                <p><strong>Total Reading Hours:</strong> {weeklyMetric?.total_reading_hours || 0}</p>
+                
+                <CalculateScoreButton />
+            </div>
+
+            <hr style={{ marginBottom: "30px" }} />
                 <h1>My Learning Dashboard</h1>
                 <CreateItemForm />
                 {/* LEARNING ITEMS LIST */}
-                <ul>
-                    {learningItems.map((learningItem: any) => (
-                        <div key={learningItem.id}>
-                            <li>{learningItem.title}</li>
-                            <li>{learningItem.type}</li>
-                            <li>{learningItem.progress_percent}</li>
-                            <li>{learningItem.status}</li>
-                            <li>{learningItem.user_id}</li>
-                        </div>
-
-                    ))
-
-                    }
+                <ul style={{ marginBottom: "40px" }}>
+                    {learningItems.map((item: any) => (
+                        <li key={item.id}>
+                            {item.title} - {item.type} ({item.status})
+                        </li>
+                    ))}
                 </ul>
                 <h1>My Daily Log Tracker</h1>
                 <CreateDailyLogForm />
