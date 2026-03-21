@@ -36,5 +36,20 @@ export async function POST(request: Request) {
 
 
 };
+// Handling GET request
+export async function GET() {
+
+    // Fetch all logs from our Database for our user
+    const allLogs = await prisma.daily_Logs.findMany({
+        where: {
+            user_id: "ravi-1"
+        },
+        orderBy: {
+            date: "desc"   // This set them to show the newest logs first!
+        }
+    });
+    // Send the data back to the Postman / Frontend
+    return NextResponse.json({ message: "Daily Logs Fetched!", data: allLogs }, { status: 200 });
+}
 
 
