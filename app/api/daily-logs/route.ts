@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { getAllDailyLogs, createDailyLog } from "@/lib/services/dailyLogService";
+
 
 export async function POST(request: Request) {
 
@@ -17,21 +19,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Reading_hours can't be negative!" }, { status: 400 });
     }
 
-    const parseDate = new Date(body.date);
+    // 3. Ask the service to save it to the database
+    const newRecord = await createDailyLog(body);
 
-    // PHASE 2: Save to Database
-    const newRecord = await prisma.daily_Logs.create({
-        data: {
-            date: parseDate,
-            build_hours: body.build_hours,
-            reading_hours: body.reading_hours,
-            ai_used: body.ai_used,
-            summary: body.summary,
-            confidence_score: body.confidence_score,
-            user_id: "ravi-1"
-        }
-    });
-    // PHASE 3: send the Response Back
+    // PHASE 4: send the Response Back
     return NextResponse.json({ message: "daily_Logs Created!", data: newRecord }, { status: 201 });
 
 
@@ -39,17 +30,11 @@ export async function POST(request: Request) {
 // Handling GET request
 export async function GET() {
 
-    // Fetch all logs from our Database for our user
-    const allLogs = await prisma.daily_Logs.findMany({
-        where: {
-            user_id: "ravi-1"
-        },
-        orderBy: {
-            date: "desc"   // This set them to show the newest logs first!
-        }
-    });
+    // 1. Ask the service to get the data
+    const allLogs = await getAllDailyLogs();
+
     // Send the data back to the Postman / Frontend
     return NextResponse.json({ message: "Daily Logs Fetched!", data: allLogs }, { status: 200 });
-}
+};
 
 
