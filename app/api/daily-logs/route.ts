@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { getAllDailyLogs, createDailyLog } from "@/lib/services/dailyLogService";
 import { dailyLogSchema } from "@/lib/validators/dailyLogValidator";
